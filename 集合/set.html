@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // - add(value)` 向集合添加一个新的项。
+      // - `remove(value)` 从集合移除一个值。
+      // - `has(value)` 如果值在集合中，返回 `true`，否则返回` false`。
+      // - `clear()` 移除集合中的所有项。
+      // - `size()` 返回集合所包含元素的数量。与数组的 `length` 属性类似。
+      // - `values()` 返回一个包含集合中所有值的数组。
+      class Set {
+        constructor() {
+          this.items = {}
+        }
+        has(value) {
+          return this.items.hasOwnProperty(value)
+        }
+        add(value) {
+          if (this.has(value)) return false
+          this.items[value] = value
+          return true
+        }
+        remove(value) {
+          if (!this.has(value)) return false
+          delete this.items[value]
+        }
+        clear() {
+          this.items = {}
+        }
+        size() {
+          return Object.keys(this.items).length
+        }
+        values() {
+          return Object.keys(this.items)
+        }
+        //集合间操作
+        union(otherSet) {
+          let unionSet = new Set()
+          for (let value of this.values()) {
+            unionSet.add(value)
+          }
+          for (let value of otherSet.values()) {
+            unionSet.add(value)
+          }
+          return unionSet
+        }
+        intersection(otherSet) {
+          let intersectionSet = new Set()
+          for (let value of this.values()) {
+            if (otherSet.has(value)) {
+              intersectionSet.add(value)
+            }
+          }
+          return intersectionSet
+        }
+        diffrence(otherSet) {
+          let diffrenceSet = new Set()
+          for (let value of this.values()) {
+            if (!otherSet.has(value)) {
+              diffrenceSet.add(value)
+            }
+          }
+          return diffrenceSet
+        }
+        subSet(otherSet) {
+          for (let value of this.values()) {
+            if (!otherSet.has(value)) {
+              return false
+            }
+          }
+          return true
+        }
+      }
+
+      // 测试
+      const set = new Set()
+
+      // add() 测试
+      set.add('abc')
+      set.add('123')
+      set.add('hh')
+      set.add('ff')
+      // console.log(set.values())
+
+      // console.log(set.has('123'))
+      // console.log(set.has('456')) //--> false
+      console.log(set.size())
+      set.remove('123')
+      set.add('pp')
+      console.log('set=', set.values())
+
+      const set2 = new Set()
+
+      set2.add('234')
+      set2.add('fff')
+      set2.add('abc')
+      set2.add('hh')
+      console.log('set=', set2.values())
+
+      console.log(set.union(set2).values())
+      console.log(set.diffrence(set2).values())
+      console.log(set.intersection(set2).values())
+      console.log(set.subSet(set2))
+    </script>
+  </body>
+</html>

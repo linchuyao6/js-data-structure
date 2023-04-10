@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script src="./queue.js"></script>
+    <script>
+      class Graph {
+        constructor() {
+          this.vertexes = []
+          this.adjList = new Map()
+        }
+        // 添加顶点
+        addVertexes(v) {
+          this.vertexes.push(v)
+          this.adjList.set(v, [])
+        }
+        // 添加边
+        addEdge(v1, v2) {
+          this.adjList.get(v1).push(v2)
+          this.adjList.get(v2).push(v1)
+        }
+        toString() {
+          let result = ''
+          for (let i = 0; i < this.vertexes.length; i++) {
+            result += this.vertexes[i] + '=>'
+            let adj = this.adjList.get(this.vertexes[i])
+            for (let j = 0; j < adj.length; j++) {
+              result += adj[j] + ' '
+            }
+            result += '\n'
+          }
+          return result
+        }
+        //BFS
+        bfs(v, hander) {
+          let color = this.makeColors()
+
+          let queue = new Queue()
+          queue.enqueue(v)
+          while (!queue.isEmpty()) {
+            let adj = queue.dequeue()
+            let adjlist = this.adjList.get(adj)
+            color[adj] = 'grey'
+            for (let i = 0; i < adjlist.length; i++) {
+              if (color[adjlist[i]] === 'white') {
+                color[adjlist[i]] = 'grey'
+                queue.enqueue(adjlist[i])
+              }
+            }
+            color[adj] = 'black'
+            if (hander) {
+              hander(adj)
+            }
+          }
+        }
+        // DFS
+        dfs(v, hander) {
+          let color = this.makeColors()
+          for (let i = 0; i < this.vertexes.length; i++) {
+            if (color[this.vertexes[i]] === 'white') {
+              this.dfsVisit(this.vertexes[i], color, hander)
+            }
+          }
+        }
+
+        //初始化图的颜色
+        //(未被访问为白色，访问时为灰色，访问完后为黑色)
+        makeColors() {
+          let colors = []
+          for (let i = 0; i < this.vertexes.length; i++) {
+            colors[this.vertexes[i]] = 'white'
+          }
+          return colors
+        }
+        dfsVisit(v, color, hander) {
+          color[v] = 'grey'
+          if (hander) {
+            hander(v)
+          }
+          let adj = this.adjList.get(v)
+          for (let i = 0; i < adj.length; i++) {
+            if (color[adj[i]] === 'white') {
+              this.dfsVisit(adj[i], color, hander)
+            }
+          }
+          color[v] = 'black'
+        }
+      }
+
+      //测试
+      let myGraph = new Graph()
+      let myVertexes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+
+      for (let i = 0; i < myVertexes.length; i++) {
+        myGraph.addVertexes(myVertexes[i])
+      }
+      myGraph.addEdge('A', 'B')
+      myGraph.addEdge('A', 'C')
+      myGraph.addEdge('A', 'D')
+      myGraph.addEdge('C', 'D')
+      myGraph.addEdge('C', 'G')
+      myGraph.addEdge('D', 'G')
+      myGraph.addEdge('D', 'H')
+      myGraph.addEdge('B', 'E')
+      myGraph.addEdge('B', 'F')
+      myGraph.addEdge('E', 'I')
+      console.log(myGraph.toString())
+      let result = ''
+      myGraph.bfs('A', function(v) {
+        result += v + ' '
+      })
+      let result2 = ''
+      myGraph.dfs('A', function(v) {
+        result2 += v + ' '
+      })
+      console.log(result)
+      console.log(result2)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // 定义优先队列数据节点
+      class QueueElement {
+        constructor(element, priority) {
+          this.element = element;
+          this.priority = priority;
+        }
+      }
+      class PriorityQueue {
+        constructor() {
+          this.items = [];
+        }
+        enqueue(element, priority) {
+          const queueElement = new QueueElement(element, priority);
+          if (this.isEmpty()) {
+            this.items.push(queueElement);
+            return;
+          }
+          // let added = false;
+          for (let i = 0; i < this.items.length; i++) {
+            if (queueElement.priority < this.items[i].priority) {
+              this.items.splice(i, 0, queueElement);
+              // added = true;
+              return;
+            }
+          }
+
+          this.items.push(queueElement);
+        }
+        dequeue() {
+          return this.items.shift();
+        }
+        front() {
+          return this.items[0];
+        }
+        size() {
+          return this.items.length;
+        }
+        toString() {
+          let result = "";
+          for (let item of this.items) {
+            result += item.element + "-" + item.priority + " ";
+          }
+          return result;
+        }
+        isEmpty() {
+          if (this.items.length === 0) return true;
+        }
+      }
+
+      const myqueue = new PriorityQueue();
+      myqueue.enqueue("a", 2);
+      myqueue.enqueue("b", 6);
+
+      console.log(myqueue.toString());
+      myqueue.enqueue("c", 1);
+      myqueue.enqueue("d", 5);
+      console.log(myqueue.items);
+      myqueue.dequeue();
+    </script>
+  </body>
+</html>

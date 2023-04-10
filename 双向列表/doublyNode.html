@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      //     - append(element)` 向链表尾部追加一个新元素。
+      // - `insert(position, element)` 向链表的指定位置插入一个新元素。
+      // - `getElement(position)` 获取指定位置的元素。
+      // - `indexOf(element)` 返回元素在链表中的索引。如果链表中没有该元素就返回 -1。
+      // - `update(position, element)` 修改指定位置上的元素。
+      // - `removeAt(position)` 从链表中的删除指定位置的元素。
+      // - `remove(element)` 从链表删除指定的元素。
+      // - `isEmpty()` 如果链表中不包含任何元素，返回 `trun`，如果链表长度大于 0 则返回 `false`。
+      // - `size()` 返回链表包含的元素个数，与数组的 `length` 属性类似。
+      // - `toString()` 由于链表项使用了 Node 类，就需要重写继承自 JavaScript 对象默认的 `toString` 方法，让其只输出元素的值。
+      // - `forwardString()` 返回正向遍历节点字符串形式。
+      // - `backwordString()` 返回反向遍历的节点的字符串形式。
+      class DoublyLinkList {
+        constructor() {
+          this.head = null;
+          this.tail = null;
+          this.length = 0;
+        }
+        Node = class {
+          constructor(data) {
+            this.next = null;
+            this.prev = null;
+            this.data = data;
+          }
+        };
+        append(data) {
+          let node = new this.Node(data);
+          if (this.head === null) {
+            this.head = node;
+            this.tail = node;
+          } else {
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+          }
+          this.length++;
+        }
+        insert(position, data) {
+          const node = new this.Node(data);
+          if (position < 0 || position > this.length) return false;
+          if (position === 0) {
+            if (this.head == null) {
+              this.head = node;
+              this.tail = node;
+            } else {
+              node.next = this.head;
+              this.head.prev = node;
+              this.head = node;
+            }
+          } else if (position === this.length) {
+            node.prev = this.tail;
+            this.tail.next = node;
+            this.tail = node;
+          } else {
+            let currentNode = this.head;
+            let index = 0;
+            while (index++ < position) {
+              currentNode = currentNode.next;
+            }
+            node.next = currentNode;
+            node.prev = currentNode.prev;
+            currentNode.prev.next = node;
+            currentNode.prev = node;
+          }
+          this.length++;
+          return true;
+        }
+        getElement(position) {
+          if (position < 0 || position >= this.length) return false;
+          let current = this.head;
+          let index = 0;
+          while (index++ < position) {
+            current = current.next;
+          }
+          return current.data;
+        }
+        indexOf(data) {
+          let current = this.head;
+          let index = 0;
+          while (current) {
+            if (current.data == data) {
+              return index;
+            }
+            index++;
+            current = current.next;
+          }
+          return -1;
+        }
+        removeAt(position) {
+          if (position < 0 || position >= this.length) return false;
+          let current = this.head;
+          if (position === 0) {
+            if (this.length === 1) {
+              this.head = null;
+              this.tail = null;
+            } else {
+              this.head = this.head.next;
+              this.head.prev = null;
+            }
+          } else if (position === this.length) {
+            current = this.tail;
+            this.tail = this.tail.prev;
+            this.tail.next = null;
+            current.prev = null;
+          } else {
+            let index = 0;
+            while (index++ < position) {
+              current = current.next;
+            }
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            current.prev = null;
+            current.next = null;
+          }
+          this.length--;
+        }
+
+        update(position, data) {
+          if (position < 0 || position >= this.length) return false;
+          let current = this.head;
+          let index = 0;
+          while (index++ < position) {
+            current = current.next;
+          }
+          current.data = data;
+          return current;
+        }
+        // 正向遍历
+        forwordString() {
+          let currentNode = this.head;
+          let forwardString = "";
+          while (currentNode) {
+            forwardString += "=>" + currentNode.data;
+            currentNode = currentNode.next;
+          }
+          return forwardString.slice(2);
+        }
+        //反向遍历
+        reverseString() {
+          var current = this.tail;
+          var reverseStr = "";
+
+          while (current) {
+            reverseStr += "<=" + current.data;
+            current = current.prev;
+          }
+
+          return reverseStr.slice(2);
+        }
+        toString() {
+          return this.forwordString();
+        }
+      }
+
+      // 测试
+      const myDoublyLink = new DoublyLinkList();
+      myDoublyLink.append("a");
+      myDoublyLink.append("b");
+      myDoublyLink.append("c");
+      myDoublyLink.insert(2, "o");
+      myDoublyLink.insert(0, "p");
+      myDoublyLink.insert(3, "k");
+      myDoublyLink.insert(myDoublyLink.length, "l");
+      console.log(myDoublyLink.forwordString());
+      console.log(myDoublyLink.reverseString());
+      console.log(myDoublyLink.indexOf("c"));
+      console.log(myDoublyLink.getElement(2));
+      console.log(myDoublyLink.update(2, "ss"));
+      console.log(myDoublyLink.forwordString());
+      myDoublyLink.removeAt(4);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // - append(element)` 向链表尾部添加一个新的项。
+      // - `insert(position, element)` 向链表的特定位置插入一个新的项。
+      // - `get(position)` 获取对应位置的元素。
+      // - `indexOf(element)` 返回元素在链表中的索引。如果链表中没有该元素就返回-1。
+      // - `update(position, element)` 修改某个位置的元素。
+      // - `removeAt(position)` 从链表的特定位置移除一项。
+      // - `remove(element)` 从链表中移除一项。
+      // - `isEmpty()` 如果链表中不包含任何元素，返回 trun，如果链表长度大于 0 则返回 false。
+      // - `size()` 返回链表包含的元素个数，与数组的 length 属性类似。
+      // - `toString()` 由于链表项使用了 Node 类，就需要重写继承自 JavaScript 对象默认的 toString 方法，让其只输出元素的值。
+      class LinkList {
+        length = 0;
+        head = null;
+        Node = class {
+          data;
+          next = null;
+          constructor(data) {
+            this.data = data;
+          }
+        };
+        append(data) {
+          const newNode = new this.Node(data);
+          if (!this.head) {
+            this.head = newNode;
+          } else {
+            let currentNode = this.head;
+            while (currentNode.next != null) {
+              currentNode = currentNode.next;
+            }
+            currentNode.next = newNode;
+          }
+          this.length++;
+        }
+        toString() {
+          let currentDate = this.head;
+          let result = "";
+          while (currentDate) {
+            result += currentDate.data + " ";
+            currentDate = currentDate.next;
+          }
+          return result;
+        }
+        insert(position, data) {
+          if (position < 0 || position > this.length) {
+            return false;
+          }
+          const node = new this.Node(data);
+          if (position == 0) {
+            node.next = this.head;
+            this.head = node;
+          } else {
+            let previousNode = null;
+            let currentNode = this.head;
+            let index = 0;
+            while (index < position) {
+              previousNode = currentNode;
+              currentNode = currentNode.next;
+              index++;
+            }
+            node.next = currentNode;
+            previousNode.next = node;
+          }
+          this.length++;
+          return node;
+        }
+        getData(position) {
+          if (position < 0 || position >= this.length) {
+            return false;
+          }
+          let currentNode = this.head;
+          let index = 0;
+          while (index++ < position) {
+            currentNode = currentNode.next;
+          }
+          return currentNode.data;
+        }
+        indexOf(data) {
+          let currentDate = this.head;
+          let index = 0;
+          while (currentDate) {
+            if (currentDate.data === data) {
+              return index;
+            }
+            index++;
+            currentDate = currentDate.next;
+          }
+          return -1;
+        }
+        update(position, date) {
+          if (position < 0 || position >= this.length) {
+            return false;
+          }
+          let currentNode = this.head;
+          let index = 0;
+          while (index++ < position) {
+            currentNode = currentNode.next;
+          }
+          currentNode.data = date;
+          return currentNode;
+        }
+        removeAt(position) {
+          if (position < 0 || position >= this.length) return false;
+          let previousNode = null;
+          let currentNode = this.head;
+          let index = 0;
+          if (position === 0) {
+            this.head = this.head.next;
+          } else {
+            while (index++ < position) {
+              previousNode = currentNode;
+              currentNode = currentNode.next;
+            }
+            previousNode.next = currentNode.next;
+          }
+          this.length--;
+          return currentNode;
+        }
+        remove(data) {
+          this.removeAt(this.indexOf(data));
+        }
+        isEmpty() {
+          return this.length === 0;
+        }
+        size() {
+          return this.length;
+        }
+      }
+
+      // 测试
+      const myLink = new LinkList();
+      myLink.append("a");
+      myLink.append("b");
+      myLink.append("c");
+      console.log(myLink);
+      console.log(myLink.toString());
+      myLink.insert(0, "123");
+      myLink.insert(2, "456");
+      console.log(myLink.toString());
+      console.log(myLink.getData(3));
+      console.log(myLink.indexOf("b"));
+      myLink.removeAt(2);
+      console.log(myLink.toString());
+      console.log(myLink.size());
+      console.log(myLink.isEmpty());
+    </script>
+  </body>
+</html>

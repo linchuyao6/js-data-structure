@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      class BinarySearchTree {
+        constructor() {
+          this.root = null
+        }
+        Node = class {
+          constructor(key) {
+            this.key = key
+            this.left = null
+            this.right = null
+          }
+        }
+        // insert(key)：向树中插入一个新的键。
+        // search(key)：在树中查找一个键，如果结点存在，则返回true；如果不存在，则返回false。
+        // inOrderTraverse：通过中序遍历方式遍历所有结点。
+        // preOrderTraverse：通过先序遍历方式遍历所有结点。
+        // postOrderTraverse：通过后序遍历方式遍历所有结点。
+        // min：返回树中最小的值/键。
+        // max：返回树中最大的值/键。
+        // remove(key)：从树中移除某个键。
+        insert(key) {
+          const newNode = new this.Node(key)
+          if (this.root === null) {
+            this.root = newNode
+          } else {
+            this.insertNode(this.root, newNode)
+          }
+        }
+        // 先序遍历
+        preOrderTraversal() {
+          let result = []
+          this.preOrderTraversalNode(this.root, result)
+          return result
+        }
+        // 中序遍历
+        inOrderTraversal() {
+          let result = []
+          this.inOrderTraversalNode(this.root, result)
+          return result
+        }
+        // 后续遍历
+        postOrderTraversal() {
+          let result = []
+          this.postorderTraversalNode(this.root, result)
+          return result
+        }
+        min() {
+          let node = this.root
+          while (node.left !== null) {
+            node = node.left
+          }
+          return node.key
+        }
+        max() {
+          let node = this.root
+          while (node.right !== null) node = node.right
+          return node.key
+        }
+        //搜索
+        search(key) {
+          return this.searchNode(this.root, key)
+        }
+
+        // 自己调用的方法
+        insertNode(node, newNode) {
+          // 先遍历右边的，再遍历左边的
+          if (newNode.key > node.key) {
+            if (node.right === null) {
+              node.right = newNode
+            } else {
+              this.insertNode(node.right, newNode)
+            }
+          } else {
+            if (node.left === null) {
+              node.left = newNode
+            } else {
+              this.insertNode(node.left, newNode)
+            }
+          }
+        }
+        remove(key) {
+          let currrent = this.root
+          let parent = null
+          let isLeftChild = true
+          //找到要删除的节点，把找到的节点赋给current
+          while (currrent.key !== key) {
+            if (key < currrent.key) {
+              isLeftChild = true
+              parent = currrent
+              currrent = currrent.left
+            } else {
+              isLeftChild = false
+              parent = currrent
+              currrent = currrent.right
+            }
+            if (currrent === null) {
+              return false
+            }
+          }
+          //删除的节点是叶子节点
+          if (currrent.left === null && currrent.right === null) {
+            if (currrent == this.root) {
+              this.root = null
+            } else {
+              if (isLeftChild) {
+                parent.left = null
+              } else {
+                parent.right = null
+              }
+            }
+          } else if (currrent.left === null) {
+            if ((currrent = this.root)) {
+              this.root = currrent.right
+            } else if (isLeftChild) {
+              parent.left = currrent.right
+            } else {
+              parent.right = currrent.right
+            }
+          } else if (currrent.right === null) {
+            if (this.root === currrent) {
+              this.root = currrent.left
+            } else if (isLeftChild) {
+              parent.left = currrent.left
+            } else {
+              parent.right = currrent.left
+            }
+          } //子节点有两个时的情况：
+          else {
+            let successor = this.getSuccessor(currrent)
+            if (currrent === this.root) {
+              this.root = successor
+            } else if (isLeftChild) {
+              parent.left = successor
+            } else {
+              parent.right = successor
+            }
+            successor.left = currrent.left
+          }
+          return true
+        }
+
+        preOrderTraversalNode(node, result) {
+          if (node == null) return result
+          result.push(node.key)
+          this.preOrderTraversalNode(node.left, result)
+          this.preOrderTraversalNode(node.right, result)
+        }
+        inOrderTraversalNode(node, result) {
+          if (node == null) return result
+          this.inOrderTraversalNode(node.left, result)
+          result.push(node.key)
+          this.inOrderTraversalNode(node.right, result)
+        }
+        postorderTraversalNode(node, result) {
+          if (node == null) return result
+          this.postorderTraversalNode(node.left, result)
+          this.postorderTraversalNode(node.right, result)
+          result.push(node.key)
+        }
+        searchNode(node, key) {
+          if (node === null) return false
+          if (node.key < key) {
+            return this.searchNode(node.right, key)
+          } else if (node.key > key) {
+            return this.searchNode(node.left, key)
+          } else {
+            return true
+          }
+        }
+        //寻找节点的后继
+        getSuccessor(delNode) {
+          let successor = delNode
+          let successorParent = delNode
+          let currrent = delNode.right
+
+          while (currrent !== null) {
+            successorParent = successor
+            successor = currrent
+            currrent = currrent.left
+          }
+
+          if (successor != delNode.right) {
+            successorParent.left = successor.right
+            successor.right = delNode.right
+          }
+
+          return successor
+        }
+      }
+
+      let bst = new BinarySearchTree()
+
+      // 插入数据
+      bst.insert(11)
+      bst.insert(7)
+      bst.insert(15)
+      bst.insert(5)
+      bst.insert(3)
+      bst.insert(9)
+      bst.insert(8)
+      bst.insert(10)
+      bst.insert(13)
+      bst.insert(12)
+      bst.insert(14)
+      bst.insert(20)
+      bst.insert(18)
+      bst.insert(6)
+      bst.insert(25)
+      console.log(bst.preOrderTraversal())
+      console.log(bst.inOrderTraversal())
+      console.log(bst.postOrderTraversal())
+      console.log(bst.max())
+      console.log(bst.min())
+      console.log(bst.search(14))
+      bst.remove(6)
+      // bst.remove(14)
+      bst.remove(13)
+      bst.remove(15)
+      console.log(bst.inOrderTraversal())
+    </script>
+  </body>
+</html>

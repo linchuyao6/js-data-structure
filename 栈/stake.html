@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  
+  <script>
+//     - push()` 添加一个新元素到栈顶位置。
+// - `pop()` 移除栈顶的元素，同时返回被移除的元素。
+// - `peek()` 返回栈顶的元素，不对栈做任何修改（该方法不会移除栈顶的元素，仅仅返回它）。
+// - `isEmpty()` 如果栈里没有任何元素就返回 `true`，否则返回 `false`。
+// - `size()` 返回栈里的元素个数。这个方法和数组的 `length` 属性类似。
+// - `toString()` 将栈结构的内容以字符串的形式返回。
+    class Stack{
+      constructor(){
+        this.items=[]
+      }
+      push(item){
+        this.items.push(item)
+      }
+      pop(item){
+        return this.items.pop()
+      }
+      peek(){
+        return this.items[this.items.length-1]
+      }
+      isEmpthy(){
+        return this.items.length===0
+      }
+      size(){
+        return this.items.length
+      }
+      toString(){
+        let result=''
+        for(let item of this.items){
+          result=result+item+' '
+        }
+        return result
+      }
+    }
+
+
+// 测试
+  //  let s=new Stack()
+  //  s.push('dd')
+  //  s.push('cc')
+  //  s.push('vv')
+  //  s.push('bb')
+  //  console.log(s.items);
+  //  s.pop()
+  //  console.log(s.size());
+  //  console.log(s.isEmpth());
+  //  let ss=
+  //  console.log(s.toString());
+ 
+  // 利用栈实现十进制转为二进制
+ function decTobin(num){
+  let stack=new Stack()
+  while(num>0){
+    stack.push(num%2)
+    num=Math.floor(num/2)
+  }
+  let binary=''
+  while(!stack.isEmpthy()){
+    binary=binary+stack.pop()
+  }
+  return binary
+ }
+console.log(decTobin(100));
+console.log(decTobin(20));
+console.log(decTobin(10));
+
+  </script>
+</body>
+
+</html>
